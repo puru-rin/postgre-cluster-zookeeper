@@ -1,0 +1,61 @@
+version: '3.7'
+
+services:
+  zoo1:
+    image: zookeeper:3.4
+    hostname: zoo1
+    ports:
+      - 2191:2181
+    networks:
+      - patroni
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=0.0.0.0:2888:3888 server.2=zoo2:2888:3888 server.3=zoo3:2888:3888
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == console
+      restart_policy:
+        condition: any
+
+  zoo2:
+    image: zookeeper:3.4
+    hostname: zoo2
+    networks:
+      - patroni
+    ports:
+      - 2192:2181
+    environment:
+      ZOO_MY_ID: 2
+      ZOO_SERVERS: server.1=zoo1:2888:3888 server.2=0.0.0.0:2888:3888 server.3=zoo3:2888:3888
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == console
+      restart_policy:
+        condition: any
+
+  zoo3:
+    image: zookeeper:3.4
+    hostname: zoo3
+    networks:
+      - patroni
+    ports:
+      - 2193:2181
+    environment:
+      ZOO_MY_ID: 3
+      ZOO_SERVERS: server.1=zoo1:2888:3888 server.2=zoo2:2888:3888 server.3=0.0.0.0:2888:3888
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == console
+      restart_policy:
+        condition: any
+
+networks:
+  patroni:
+    driver: overlay
+    attachable: true

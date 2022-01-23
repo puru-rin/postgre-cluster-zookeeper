@@ -1,0 +1,69 @@
+version: "3.4"
+
+networks:
+    patroni_patroni: 
+        external: true
+services:
+    patroni1:
+        image: patroni-test
+        networks: [ patroni_patroni ]
+        ports:
+            - 5441:5432
+            - 8091:8091
+        hostname: patroni1
+        volumes:
+          - /patroni1:/data/patroni
+        environment:
+            PATRONI_API_CONNECT_PORT: 8091
+            REPLICATION_NAME: replicator 
+            REPLICATION_PASS: replpass
+            SU_NAME: postgres
+            SU_PASS: supass
+            POSTGRES_APP_ROLE_PASS: appass
+        deploy:
+          replicas: 1
+          placement:
+            constraints: [node.hostname == console]
+
+    patroni2:
+        image: patroni-test
+        networks: [ patroni_patroni ]
+        ports:
+            - 5442:5432
+            - 8092:8091
+        hostname: patroni2
+        volumes:
+          - /patroni2:/data/patroni
+        environment:
+            PATRONI_API_CONNECT_PORT: 8091
+            REPLICATION_NAME: replicator 
+            REPLICATION_PASS: replpass
+            SU_NAME: postgres
+            SU_PASS: supass
+            POSTGRES_APP_ROLE_PASS: appass
+        deploy:
+          replicas: 1
+          placement:
+            constraints: [node.hostname == console]
+
+
+    patroni3:
+        image: patroni-test
+        networks: [ patroni_patroni ]
+        ports:
+            - 5443:5432
+            - 8093:8091
+        hostname: patroni3
+        volumes:
+          - /patroni3:/data/patroni
+        environment:
+            PATRONI_API_CONNECT_PORT: 8091
+            REPLICATION_NAME: replicator 
+            REPLICATION_PASS: replpass
+            SU_NAME: postgres
+            SU_PASS: supass
+            POSTGRES_APP_ROLE_PASS: appass
+        deploy:
+          replicas: 1
+          placement:
+            constraints: [node.hostname == console]
