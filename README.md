@@ -1,5 +1,3 @@
-# postgre-cluster-zookeeper
-
 # Creating a PostgreSQL cluster using docker swarm + patroni + zookeeper + haproxy
 
 
@@ -145,6 +143,6 @@ docker stack deploy --compose-file docker-compose-haproxy.yml haproxy
 
 ```sh
 docker ps | grep haproxy
-docker exec -ti {{id}} /bin/bash
+docker exec -ti {$ID} /bin/bash
 hatop -s /var/run/haproxy/haproxy.sock (inside container)
 ```
